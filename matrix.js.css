@@ -1,0 +1,169 @@
+/* Matrix Background */
+body {
+    background: #000;
+    color: #0f0;
+    font-family: 'Courier New', monospace;
+    margin: 0;
+    padding: 0;
+    overflow-x: hidden;
+}
+
+#matrixCanvas {
+    position: fixed;
+    top: 0;
+    left: 0;
+    width: 100%;
+    height: 100%;
+    z-index: -1;
+}
+
+/* Fixed Title */
+.fixed-title {
+    position: fixed;
+    top: 0;
+    left: 0;
+    width: 100%;
+    background: rgba(0, 0, 0, 0.9);
+    border-bottom: 2px solid #0f0;
+    z-index: 1000;
+    padding: 15px 0;
+    box-shadow: 0 0 20px rgba(0, 255, 0, 0.5);
+}
+
+.title-container {
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    gap: 15px;
+    max-width: 1200px;
+    margin: 0 auto;
+    padding: 0 20px;
+}
+
+.title-container i {
+    font-size: 24px;
+    color: #0f0;
+    animation: pulse 2s infinite;
+}
+
+.title-container h1 {
+    margin: 0;
+    font-size: 24px;
+    font-weight: 700;
+    color: #0f0;
+    text-shadow: 0 0 10px #0f0;
+    text-align: center;
+    font-family: 'Changa', sans-serif;
+}
+
+@keyframes pulse {
+    0%, 100% { opacity: 1; transform: scale(1); }
+    50% { opacity: 0.5; transform: scale(1.1); }
+}
+
+/* Matrix Borders */
+.matrix-border {
+    border: 1px solid #0f0;
+    box-shadow: 0 0 10px rgba(0, 255, 0, 0.3);
+    position: relative;
+    overflow: hidden;
+}
+
+.matrix-border::before {
+    content: '';
+    position: absolute;
+    top: -2px;
+    left: -2px;
+    right: -2px;
+    bottom: -2px;
+    background: linear-gradient(45deg, 
+        transparent 20%, 
+        rgba(0, 255, 0, 0.2) 40%, 
+        transparent 60%, 
+        rgba(0, 255, 0, 0.2) 80%, 
+        transparent 100%);
+    z-index: -1;
+    animation: borderGlow 3s linear infinite;
+}
+
+@keyframes borderGlow {
+    0% { background-position: 0% 0%; }
+    100% { background-position: 200% 200%; }
+}
+
+/* Matrix Buttons */
+.btn-matrix {
+    background: rgba(0, 255, 0, 0.1);
+    color: #0f0;
+    border: 1px solid #0f0;
+    border-radius: 4px;
+    padding: 10px 20px;
+    font-family: 'Courier New', monospace;
+    font-weight: bold;
+    cursor: pointer;
+    transition: all 0.3s;
+}
+
+.btn-matrix:hover {
+    background: rgba(0, 255, 0, 0.2);
+    box-shadow: 0 0 15px rgba(0, 255, 0, 0.5);
+    transform: translateY(-2px);
+}
+
+.btn-small {
+    padding: 8px 16px;
+    font-size: 14px;
+}
+
+/* Table Styles */
+table {
+    width: 100%;
+    border-collapse: collapse;
+    background: rgba(0, 0, 0, 0.7);
+}
+
+th {
+    background: rgba(0, 255, 0, 0.1);
+    color: #0f0;
+    padding: 12px;
+    border: 1px solid #0f0;
+    text-align: right;
+    font-weight: bold;
+}
+
+td {
+    padding: 10px;
+    border: 1px solid #0f0;
+    color: #0f0;
+}
+
+tr:hover td {
+    background: rgba(0, 255, 0, 0.05);
+}
+
+/* Scrollbar */
+::-webkit-scrollbar {
+    width: 10px;
+}
+
+::-webkit-scrollbar-track {
+    background: rgba(0, 255, 0, 0.05);
+}
+
+::-webkit-scrollbar-thumb {
+    background: rgba(0, 255, 0, 0.3);
+    border-radius: 5px;
+}
+
+::-webkit-scrollbar-thumb:hover {
+    background: rgba(0, 255, 0, 0.5);
+}
+
+@media (max-width: 768px) {
+    .title-container h1 {
+        font-size: 18px;
+    }
+    .title-container i {
+        font-size: 18px;
+    }
+}
