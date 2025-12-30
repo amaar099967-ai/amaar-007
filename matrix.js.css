@@ -1,0 +1,172 @@
+// matrix.js - Professional Version (Enhanced)
+class EnhancedMatrixBackground {
+    constructor() {
+        this.canvas = document.getElementById('matrixCanvas');
+        if (!this.canvas) return;
+        
+        this.ctx = this.canvas.getContext('2d');
+        this.characters = '01'; // Keep binary for professional look
+        this.fontSize = 14;
+        this.columns = 0;
+        this.drops = [];
+        this.speed = 30; // Lower is faster
+        this.opacity = 0.05; // Very subtle for professional look
+        
+        this.init();
+    }
+    
+    init() {
+        this.resizeCanvas();
+        this.setupColumns();
+        this.startAnimation();
+        
+        window.addEventListener('resize', () => {
+            this.resizeCanvas();
+            this.setupColumns();
+        });
+        
+        // Add interactivity
+        this.setupInteractivity();
+    }
+    
+    resizeCanvas() {
+        this.canvas.width = window.innerWidth;
+        this.canvas.height = window.innerHeight;
+    }
+    
+    setupColumns() {
+        this.columns = Math.floor(this.canvas.width / this.fontSize);
+        this.drops = [];
+        
+        for (let i = 0; i < this.columns; i++) {
+            this.drops[i] = {
+                y: Math.random() * -100, // Start above the screen
+                speed: Math.random() * 2 + 1,
+                charIndex: Math.floor(Math.random() * this.characters.length),
+                opacity: Math.random() * 0.3 + 0.1
+            };
+        }
+    }
+    
+    draw() {
+        // Clear with fade effect
+        this.ctx.fillStyle = `rgba(0, 0, 0, ${this.opacity})`;
+        this.ctx.fillRect(0, 0, this.canvas.width, this.canvas.height);
+        
+        // Set font
+        this.ctx.font = `${this.fontSize}px 'Courier New', monospace`;
+        
+        // Draw characters
+        for (let i = 0; i < this.drops.length; i++) {
+            const drop = this.drops[i];
+            
+            // Get character
+            const char = this.characters[drop.charIndex];
+            
+            // Calculate position
+            const x = i * this.fontSize;
+            
+            // Draw with gradient
+            const gradient = this.ctx.createLinearGradient(x, drop.y, x, drop.y + this.fontSize);
+            
+            if (drop.y < this.canvas.height * 0.3) {
+                // Top - bright
+                gradient.addColorStop(0, `rgba(74, 111, 165, ${drop.opacity})`);
+                gradient.addColorStop(1, `rgba(74, 111, 165, ${drop.opacity * 0.5})`);
+            } else if (drop.y < this.canvas.height * 0.7) {
+                // Middle - medium
+                gradient.addColorStop(0, `rgba(74, 111, 165, ${drop.opacity * 0.7})`);
+                gradient.addColorStop(1, `rgba(74, 111, 165, ${drop.opacity * 0.3})`);
+            } else {
+                // Bottom - fade out
+                gradient.addColorStop(0, `rgba(74, 111, 165, ${drop.opacity * 0.3})`);
+                gradient.addColorStop(1, `rgba(74, 111, 165, 0)`);
+            }
+            
+            this.ctx.fillStyle = gradient;
+            this.ctx.fillText(char, x, drop.y);
+            
+            // Update drop position
+            drop.y += drop.speed;
+            
+            // Change character occasionally
+            if (Math.random() > 0.99) {
+                drop.charIndex = Math.floor(Math.random() * this.characters.length);
+            }
+            
+            // Reset drop if it goes off screen
+            if (drop.y > this.canvas.height) {
+                this.resetDrop(i);
+            }
+        }
+    }
+    
+    resetDrop(index) {
+        this.drops[index] = {
+            y: Math.random() * -100,
+            speed: Math.random() * 2 + 1,
+            charIndex: Math.floor(Math.random() * this.characters.length),
+            opacity: Math.random() * 0.3 + 0.1
+        };
+    }
+    
+    setupInteractivity() {
+        // Speed control based on mouse position
+        document.addEventListener('mousemove', (e) => {
+            const mouseX = e.clientX / window.innerWidth;
+            const mouseY = e.clientY / window.innerHeight;
+            
+            // Adjust speed based on mouse position
+            this.speed = 15 + mouseY * 30;
+            
+            // Adjust opacity based on mouse position
+            this.opacity = 0.03 + mouseX * 0.04;
+        });
+        
+        // Click to create ripple effect
+        document.addEventListener('click', (e) => {
+            this.createRippleEffect(e.clientX, e.clientY);
+        });
+    }
+    
+    createRippleEffect(x, y) {
+        // Create a ripple effect from click point
+        for (let i = 0; i < this.drops.length; i++) {
+            const dropX = i * this.fontSize;
+            const dropY = this.drops[i].y;
+            
+            // Calculate distance from click
+            const distance = Math.sqrt(Math.pow(dropX - x, 2) + Math.pow(dropY - y, 2));
+            
+            if (distance < 200) {
+                // Push drop away from click point
+                const angle = Math.atan2(dropY - y, dropX - x);
+                const force = (200 - distance) / 200 * 5;
+                
+                this.drops[i].y += Math.sin(angle) * force;
+                this.drops[i].speed *= 1.2;
+                
+                // Change to white temporarily
+                setTimeout(() => {
+                    if (this.drops[i]) {
+                        this.drops[i].speed /= 1.2;
+                    }
+                }, 500);
+            }
+        }
+    }
+    
+    startAnimation() {
+        const animate = () => {
+            this.draw();
+            requestAnimationFrame(animate);
+        };
+        
+        animate();
+    }
+}
+
+// Initialize enhanced matrix
+document.addEventListener('DOMContentLoaded', () => {
+    new EnhancedMatrixBackground();
+});
